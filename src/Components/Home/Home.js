@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const [users, setUsers] = useState([]);
@@ -19,7 +20,11 @@ const Home = () => {
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log(data);
+          if (data.deletedCount > 0) {
+            console.log('deleted');
+            const newUsers = users.filter((user) => user._id !== id);
+            setUsers(newUsers);
+          }
         });
     }
   };
@@ -32,6 +37,7 @@ const Home = () => {
         <div key={user._id}>
           <h1>{user.name}</h1>
           <h2>{user.email}</h2>
+          <Link to={`/update/${user._id}`}><button>Update</button></Link>
           <button onClick={() => deleteUser(user._id)}>Delete</button>
         </div>
       ))}
